@@ -12,7 +12,7 @@ items:
     source:
       git:
         ref: pipeline
-        uri: https://github.com/siamaksade/cart-service.git
+        uri: https://github.com/N3G5/cart-service.git
       type: Git
     strategy:
       type: JenkinsPipeline
