@@ -1,6 +1,6 @@
 node('maven') {
   stage('Build App') {
-    git url: "https://github.com/siamaksade/cart-service.git"
+    git url: "https://github.com/N3G5/cart-service.git"
     sh "mvn clean package -s src/main/config/settings.xml"
   }
   stage('Integration Test') {
