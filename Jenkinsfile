@@ -47,9 +47,9 @@ pipeline {
       		steps {
         		script {
           			openshift.withCluster() {
-            			openshift.withProject("cartexample") {
-              				openshiftDeploy depCfg: 'cart'
-    						openshiftVerifyDeployment depCfg: 'cart', replicaCount: 1, verifyReplicaCount: true
+            			openshift.withProject("cartexample") { 
+            				openshift.secelctor("dc", "cart").rollout().latest()
+              				openshiftDeploy(deploymentConfig: 'cartexample:cart')
             			}
           			}
         		}
