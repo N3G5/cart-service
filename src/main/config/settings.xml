@@ -3,11 +3,25 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   
+  <servers>
+     <server>
+        <id>nexus</id>
+        <username>deployment</username>
+        <password>deployment123</password>
+     </server>
+     <server>
+        <id>nexus3</id>
+        <username>admin</username>
+        <password>admin123</password>
+     </server>
+  </servers>
+  
   <mirrors>
     <mirror>
-      <id>nexus.default</id>
-      <url>http://nexus.lab-infra.svc.cluster.local:8081/content/groups/public/</url>
-      <mirrorOf>external:*</mirrorOf>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://nexus:8081/repository/maven-all-public/</url>
     </mirror>
   </mirrors>
 
