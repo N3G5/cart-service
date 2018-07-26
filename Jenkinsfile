@@ -9,10 +9,8 @@ pipeline {
         	steps {
             	git url: "https://github.com/N3G5/cart-service.git"
             	script {
-            	    def pom = readMavenPom file: 'pom.xml'
-            	    version = pom.version
-            	}
 					sh "${mvnCmd} clean package"
+            	}
         	}
   		}
   		stage('Integration Test') {
