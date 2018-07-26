@@ -43,17 +43,6 @@ pipeline {
 	    		}
     		}
 		}
-		stage('Deploy App') {
-      		steps {
-        		script {
-          			openshift.withCluster() {
-            			openshift.withProject("cartexample") { 
-            				openshift.selector("dc", "cart").rollout().latest()
-            			}
-          			}
-        		}
-      		}
-  		}
   		stage('Component Test') {
   			steps {
   			    script {
