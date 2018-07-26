@@ -49,7 +49,6 @@ pipeline {
           			openshift.withCluster() {
             			openshift.withProject("cartexample") { 
             				openshift.secelctor("dc", "cart").rollout().latest()
-              				openshiftDeploy(deploymentConfig: 'cartexample:cart')
             			}
           			}
         		}
