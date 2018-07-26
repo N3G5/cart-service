@@ -16,7 +16,11 @@ pipeline {
         	}
   		}
   		stage('Integration Test') {
-    		sh "${mvnCmd} verify"
+  			steps {
+  				script {
+	    			sh "${mvnCmd} verify"
+  				}
+  			}
     	}
     	stage('Code Analysis') {
       		steps {
@@ -31,16 +35,15 @@ pipeline {
       		}
     	}
     	stage('Build Image') {
-    		script {
-    		    openshift.withCluster() {
-    		      openshift.withProject("cartexample") {
-    		          openshift.selector("bc", "cart").startBuild("--from-file=target/cart.jar --follow")
-    		      }
-    		   }
-
-    		    
+    		steps {
+	    		script {
+	    		    openshift.withCluster() {
+	    		      openshift.withProject("cartexample") {
+	    		          openshift.selector("bc", "cart").startBuild("--from-file=target/cart.jar --follow")
+	    		      }
+	    		   }
+	    		}
     		}
-
 		}
 		stage('Deploy App') {
       		steps {
@@ -55,8 +58,12 @@ pipeline {
       		}
   		}
   		stage('Component Test') {
-    		sh "curl -s -X POST http://cart.dev.svc.cluster.local:8080/api/cart/dummy/666/1"
-			sh "curl -s http://cart.dev.svc.cluster.local:8080/api/cart/dummy | grep 'Dummy Product'"
+  			steps {
+  			    script {
+		    		sh "curl -s -X POST http://cart.dev.svc.cluster.local:8080/api/cart/dummy/666/1"
+					sh "curl -s http://cart.dev.svc.cluster.local:8080/api/cart/dummy | grep 'Dummy Product'"
+  			    }
+  			}
   		}
   	}
 }
