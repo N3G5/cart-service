@@ -37,11 +37,49 @@ pipeline {
 	    		script {
 	    		    openshift.withCluster() {
 	    		      openshift.withProject("cartexample") {
-	    		          openshift.selector("bc", "cart").startBuild("--from-file=target/cart.jar --follow")
+	    		          openshift.selector("bc", "cart").startBuild("--from-file=target/cart.jar", "--wait=true")
 	    		      }
 	    		   }
 	    		}
     		}
+		}
+		stage('Create DC') {
+			when {
+                expression {
+					openshift.withCluster() {
+					    openshift.withProject("cartexample") {
+					        return !openshift.selector("dc", "cart").exists()
+					    }
+					}
+                }
+ 				steps {
+ 				    script {
+ 				        openshift.withCluster() {
+ 				            openshift.withProject("cartexample") {
+ 				                def app = openshift.newApp("cart:latest")
+ 				                app.narrow("svc").expose();
+ 				                
+ 				                def dc = openshift.selector("dc", "cart")
+ 				                while (dc.object().spec.replicas != dc.object().status.availableReplicas) {
+ 				                	sleep 10                                        
+                                }
+								openshift.set("triggers", "dc/cart", "--manual")
+ 				            }
+ 				        }
+ 				    }
+ 				}
+			}
+		}
+		stage('Deploy APP'){
+		    steps{
+		        script{
+		            openshift.withCluster() {
+		                openshift.withProject("cartexample"){
+		                    openshift.selector("dc", "cart").rollout().latest();
+		                }
+		            }
+		        }
+		    }
 		}
   		stage('Component Test') {
   			steps {
