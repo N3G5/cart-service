@@ -48,7 +48,7 @@ pipeline {
         		script {
           			openshift.withCluster() {
             			openshift.withProject("cartexample") { 
-            				openshift.secelctor("dc", "cart").rollout().latest()
+            				openshift.selector("dc", "cart").rollout().latest()
             			}
           			}
         		}
